@@ -18,7 +18,12 @@ BOTS = {
 }
 
 
-def codemaster(module_code_map):
+def select_params(module_code_map):
+    """Select module (code file) and bot
+
+    Arguments:
+        module_code_map {dict} -- dict with module names as keys and code contents as values
+    """
     c1, c2 = st.columns(2)
 
     with c1:
@@ -32,9 +37,30 @@ def codemaster(module_code_map):
             list(module_code_map.keys()),
         )
 
+    return module, bot
+
+
+def render_response(module, module_code_map, bot):
+    """Render response from bot on page
+
+    Arguments:
+        module {str} -- module name
+        module_code_map {dict} -- dict with module names as keys and code contents as values
+        bot {str} -- bot name
+    """
     code = module_code_map[module]
 
     try:
         st.markdown(rate_code(code, BOTS[bot]))
     except RuntimeError as e:
         st.error(body="Error: " + str(e), icon="🔥")
+
+
+def codemaster(module_code_map):
+    """Show codemaster page
+
+    Arguments:
+        module_code_map {dict} -- dict with module names as keys and code contents as values
+    """
+    module, bot = select_params(module_code_map)
+    render_response(module, module_code_map, bot)

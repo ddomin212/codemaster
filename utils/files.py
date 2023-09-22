@@ -3,6 +3,14 @@ import subprocess
 
 
 def list_files_in_dir(directory):
+    """List all files in directory
+
+    Arguments:
+        directory {str} -- path to directory
+
+    Returns:
+        dict -- dictionary with files as keys and empty list as values
+    """
     file_list = {}
     for root, _, files in os.walk(directory):
         for file in files:
@@ -17,10 +25,26 @@ def list_files_in_dir(directory):
 
 
 def get_py_files_from_dir(path):
+    """Get all python files from a directory
+
+    Arguments:
+        path {str} -- path to directory
+
+    Returns:
+        dict -- dictionary with files as keys and empty list as values
+    """
     return list_files_in_dir(path)
 
 
 def clone_github_get_path(repo_path):
+    """Clone a github repo and return the path to it
+
+    Arguments:
+        repo_path {str} -- path to github repo
+
+    Returns:
+        str -- path to local cloned repo
+    """
     subprocess.run(
         [
             "git",

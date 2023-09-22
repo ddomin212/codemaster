@@ -9,6 +9,15 @@ def lint_codebase(
     path,
     file_list,
 ):
+    """Lint codebase
+
+    Arguments:
+        path {str} -- path to codebase
+        file_list {list} -- list of python files in codebase
+
+    Returns:
+        dict -- dictionary with pylint outputs, stats, and code
+    """
     files_to_lint = list(file_list.keys())
     pylint_options = ["--disable=import-error"]
     pylint_outputs = {}
@@ -20,6 +29,17 @@ def lint_codebase(
 
 
 def pylint_code(path, python_file, pylint_options, pylint_outputs):
+    """Lint code
+
+    Arguments:
+        path {str} -- path to codebase
+        python_file {str} -- path to python file
+        pylint_options {list} -- list of pylint options
+        pylint_outputs {dict} -- dictionary with pylint outputs, stats, and code
+    """
+    with open(python_file, "r") as f:
+        code = f.read()
+
     sys.stdout = io.StringIO()
 
     result = pylint.lint.Run([python_file] + pylint_options, do_exit=False)
@@ -29,32 +49,19 @@ def pylint_code(path, python_file, pylint_options, pylint_outputs):
 
     pylint_outputs[
         python_file.replace(path, "").replace(".py", "").replace("/", ".")
-    ] = (pylint_output_text, result.linter.stats)
-
-
-def parse_pylint_stdout(message):
-    error_pattern = r"([^:]+:\d+:\d+: ([WE]\d+): (.+))"
-    rating_pattern = r"Your code has been rated at ([\d.]+)/10 \(previous run: ([\d.]+)/10, ([+-]\d+\.\d+)"
-    error_matches = re.findall(error_pattern, message)
-    rating_match = re.search(rating_pattern, message)
-
-    errors = []
-
-    for match in error_matches:
-        errors.append((match[0], match[2], match[3]))
-
-    if rating_match:
-        current_score, previous_score, score_difference = rating_match.groups()
-
-    return (
-        errors,
-        current_score,
-        previous_score,
-        score_difference,
-    )
+    ] = (pylint_output_text, result.linter.stats, code)
 
 
 def clean_pylint_stdout(message):
+    """Clean pylint output for display
+
+    Arguments:
+        message {str} -- pylint output
+
+    Returns:
+        str -- cleaned pylint output
+    """
     clean_message = re.sub(r"^\*+", "", message, flags=re.MULTILINE)
-    clean_message = re.sub(r"/[^\s]+:\d+:\d+:", "", clean_message)
+    clean_message = re.sub(r"/[^:\s]+:", "", clean_message)
+    clean_message = re.sub(r"^static", "", clean_message, flags=re.MULTILINE)
     return clean_message

@@ -4,6 +4,14 @@ from .code import file_stats_code
 
 
 def get_libs(path):
+    """Get the libraries used in a codebase from requirements.txt
+
+    Arguments:
+        path {str} -- path to codebase
+
+    Returns:
+        list -- list of libraries
+    """
     try:
         with open(f"{path}requirements.txt", "r") as f:
             libs = f.readlines()
@@ -13,44 +21,40 @@ def get_libs(path):
         return []
 
 
-def num_files(file_list):
-    return len(file_list.keys())
+def num_files(file_dict):
+    """Get the number of files in a codebase
+
+    Arguments:
+        file_dict {dict} -- dictionary with codebase files
+
+    Returns:
+        int -- number of files
+    """
+    return len(file_dict.keys())
 
 
 def module_to_code_map(df):
+    """Create a dictionary mapping modules to code
+
+    Arguments:
+        df {pd.DataFrame} -- dataframe with code
+
+    Returns:
+        dict -- dictionary mapping modules (files) to code content
+    """
     return {module: code for module, code in zip(df["Files"], df["Code"])}
 
 
-def file_stats_codebase(path, file_list):
-    file_names = {}
-    num_functions = []
-    num_classes = []
-    num_variables = []
-    num_file_dependencies = []
-    num_dependencies = []
-    num_obj_nests = []
-    num_indents = []
-    total_lines = []
-    codes = []
+def create_dependency_df(file_names):
+    """Create a dataframe with file dependencies
 
-    for f in file_list.keys():
-        file_stats_code(
-            path,
-            f,
-            codes,
-            file_names,
-            num_functions,
-            num_classes,
-            num_variables,
-            num_file_dependencies,
-            num_dependencies,
-            num_obj_nests,
-            num_indents,
-            total_lines,
-        )
+    Arguments:
+        file_names {dict} -- dictionary with file names and dependencies
 
-    # Create a DataFrame from the dependencies
-    df = pd.DataFrame(
+    Returns:
+        pd.DataFrame -- dataframe with file dependencies
+    """
+    return pd.DataFrame(
         [
             (index, value)
             for index, values in file_names.items()
@@ -58,7 +62,38 @@ def file_stats_codebase(path, file_list):
         ],
         columns=["File", "Dependency"],
     )
-    stat_df = pd.DataFrame(
+
+
+def create_stat_df(
+    num_functions,
+    num_classes,
+    num_variables,
+    num_file_dependencies,
+    num_dependencies,
+    num_obj_nests,
+    num_indents,
+    total_lines,
+    codes,
+    file_names,
+):
+    """Create a dataframe with code stats
+
+    Arguments:
+        num_functions {list} -- list with number of functions
+        num_classes {list} -- list with number of classes
+        num_variables {list} -- list with number of variables
+        num_file_dependencies {list} -- list with number of file dependencies
+        num_dependencies {list} -- list with number of dependencies
+        num_obj_nests {list} -- list with number of object nests
+        num_indents {list} -- list with number of indents
+        total_lines {list} -- list with number of lines
+        codes {list} -- list with code
+        file_names {dict} -- dictionary with file names and dependencies
+
+    Returns:
+        pd.DataFrame -- dataframe with code stats
+    """
+    return pd.DataFrame(
         {
             "Files": list(file_names.keys()),
             "Functions": num_functions,
@@ -73,4 +108,36 @@ def file_stats_codebase(path, file_list):
         }
     )
 
-    return df, stat_df
+
+def file_stats_codebase(path, file_dict):
+    """Get the stats for a codebase
+
+    Arguments:
+        path {str} -- The path to the codebase
+        file_dict {dict} -- dictionary with codebase files
+
+    Returns:
+        pd.DataFrame -- dataframe with file dependencies
+        pd.DataFrame -- dataframe with code stats
+    """
+    code_metrics = {
+        "file_names": {},
+        "num_functions": [],
+        "num_classes": [],
+        "num_variables": [],
+        "num_file_dependencies": [],
+        "num_dependencies": [],
+        "num_obj_nests": [],
+        "num_indents": [],
+        "total_lines": [],
+        "codes": [],
+    }
+
+    for f in file_dict.keys():
+        file_stats_code(path, f, **code_metrics)
+
+    dependency_df = create_dependency_df(code_metrics["file_names"])
+
+    stat_df = create_stat_df(**code_metrics)
+
+    return dependency_df, stat_df

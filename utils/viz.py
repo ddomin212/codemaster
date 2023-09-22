@@ -1,8 +1,17 @@
+from graphviz import Digraph
+
+
 def plot_dependencies(dependencies):
-    from graphviz import Digraph
+    """Plot the dependencies
+
+    Arguments:
+        dependencies {pd.DataFrame} -- dataframe with dependencies
+
+    Returns:
+        Digraph -- graphviz graph
+    """
 
     dot = Digraph(format="png")
-    dot.engine = "dot"
 
     local_modules = get_local_modules(dependencies)
 
@@ -18,11 +27,25 @@ def plot_dependencies(dependencies):
 
 
 def add_edges(dot, dependencies):
+    """Add edges to the graph
+
+    Arguments:
+        dot {Digraph} -- graphviz graph
+        dependencies {pd.DataFrame} -- dataframe with dependencies
+    """
     for i, row in dependencies.iterrows():
         dot.edge(row["File"], row["Dependency"])
 
 
 def split_dependency(x):
+    """Split a dependency into module and file
+
+    Arguments:
+        x {str} -- dependency
+
+    Returns:
+        tuple -- module, file
+    """
     parts = x.split(".")
     if len(parts) > 1:
         return parts[0], parts[1]
@@ -31,11 +54,26 @@ def split_dependency(x):
 
 
 def get_local_modules(df):
+    """Get the local modules
+
+    Arguments:
+        df {pd.DataFrame} -- dataframe with dependencies
+
+    Returns:
+        list -- list of local modules
+    """
     modules, module_files = zip(*df["File"].apply(split_dependency))
     return list(set(module_files + modules))
 
 
 def add_nodes(dot, local_modules, dependencies):
+    """Add nodes to the graph
+
+    Arguments:
+        dot {Digraph} -- graphviz graph
+        local_modules {list} -- list of local modules
+        dependencies {pd.DataFrame} -- dataframe with dependencies
+    """
     unique_dependencies = list(
         set(
             dependencies["Dependency"].unique().tolist()
@@ -51,6 +89,14 @@ def add_nodes(dot, local_modules, dependencies):
 
 
 def reduce_dependencies(df):
+    """Reduce the dependencies to only include the module, for the purpose of visualization
+
+    Arguments:
+        df {pd.DataFrame} -- dataframe with dependencies
+
+    Returns:
+        pd.DataFrame -- dataframe with reduced dependencies
+    """
     reduced_df = df
     reduced_df.Dependency = reduced_df.Dependency.apply(
         lambda x: x.split(".")[0]
