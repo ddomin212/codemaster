@@ -1,4 +1,11 @@
 /env
+.env
 *.pdf
 *.csv
-test.txt
+*.ipynb
+test.py
+/static
+Codemaster.py
+/legacy
+**/__pycache__/
+```
