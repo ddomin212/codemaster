@@ -21,16 +21,16 @@ def get_libs(path: str) -> list[str] | list:
         return []
 
 
-def num_files(file_dict: dict[str, list[str]]) -> int:
+def num_files(file_list: list[str]) -> int:
     """Get the number of files in a codebase
 
     Arguments:
-        file_dict {dict} -- dictionary with codebase files
+        file_list {list} -- dictionary with codebase files
 
     Returns:
         int -- number of files
     """
-    return len(file_dict.keys())
+    return len(file_list)
 
 
 def module_to_code_map(df: pd.core.frame.DataFrame) -> dict[str, str]:
@@ -110,7 +110,7 @@ def create_stat_df(
 
 
 def file_stats_codebase(
-    path: str, file_dict: dict[str, list[str]]
+    path: str, file_list: list[str]
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Get the stats for a codebase
 
@@ -135,7 +135,7 @@ def file_stats_codebase(
         "codes": [],
     }
 
-    for f in file_dict.keys():
+    for f in file_list:
         file_stats_code(path, f, **code_metrics)
 
     dependency_df = create_dependency_df(code_metrics["file_names"])

@@ -1,3 +1,7 @@
+import ast
+
+from pandas import DataFrame
+
 EXPECTED_CODE_STATS = {
     "num_functions": 1,
     "num_classes": 0,
@@ -10,7 +14,8 @@ EXPECTED_CODE_STATS = {
 }
 
 
-def test_get_stats_as_tuples(test_dataframes):
+def test_get_stats_as_tuples(test_dataframes: tuple[DataFrame, DataFrame]):
+    """Test parsing a dataframe row into a list of tuples in format (column, value)"""
     from utils.stats.code import get_stats_as_tuples
 
     _, stats_df = test_dataframes
@@ -19,14 +24,16 @@ def test_get_stats_as_tuples(test_dataframes):
     assert len(stats) == len(EXPECTED_CODE_STATS)
 
 
-def test_find_max_chained_nests(test_code_ast):
+def test_find_max_chained_nests(test_code_ast: ast.AST):
+    """Test finding the maximum number of chained nests in a code file"""
     from utils.stats.code import find_max_chained_nests
 
     max_nests = find_max_chained_nests(test_code_ast)
     assert max_nests == 0
 
 
-def test_get_num_functions(test_code_ast):
+def test_get_num_functions(test_code_ast: ast.AST):
+    """Test finding the number of functions in a code file"""
     from utils.stats.code import get_num_functions
 
     num_functions = []
@@ -34,7 +41,8 @@ def test_get_num_functions(test_code_ast):
     assert num_functions[0] == EXPECTED_CODE_STATS["num_functions"]
 
 
-def test_get_num_classes(test_code_ast):
+def test_get_num_classes(test_code_ast: ast.AST):
+    """Test finding the number of classes in a code file"""
     from utils.stats.code import get_num_classes
 
     num_classes = []
@@ -42,7 +50,8 @@ def test_get_num_classes(test_code_ast):
     assert num_classes[0] == EXPECTED_CODE_STATS["num_classes"]
 
 
-def test_get_num_variables(test_code_ast):
+def test_get_num_variables(test_code_ast: ast.AST):
+    """Test finding the number of variables in a code file"""
     from utils.stats.code import get_num_variables
 
     num_variables = []
@@ -50,7 +59,8 @@ def test_get_num_variables(test_code_ast):
     assert num_variables[0] == EXPECTED_CODE_STATS["num_variables"]
 
 
-def test_get_num_obj_nests(test_code_ast):
+def test_get_num_obj_nests(test_code_ast: ast.AST):
+    """Test finding the number of object (functions, classes) nests in a code file"""
     from utils.stats.code import get_num_obj_nests
 
     num_obj_nests = []
@@ -58,7 +68,8 @@ def test_get_num_obj_nests(test_code_ast):
     assert num_obj_nests[0] == EXPECTED_CODE_STATS["num_obj_nests"]
 
 
-def test_get_max_indent(test_code_str):
+def test_get_max_indent(test_code_str: str):
+    """Test finding the maximum number of indents in a code file"""
     from utils.stats.code import get_max_indent
 
     num_indents = []
@@ -66,7 +77,8 @@ def test_get_max_indent(test_code_str):
     assert num_indents[0] == EXPECTED_CODE_STATS["num_indents"]
 
 
-def test_get_num_lines(test_code_str):
+def test_get_num_lines(test_code_str: str):
+    """Test finding the number of lines in a code file"""
     from utils.stats.code import get_num_lines
 
     total_lines = []
@@ -74,7 +86,8 @@ def test_get_num_lines(test_code_str):
     assert total_lines[0] == EXPECTED_CODE_STATS["total_lines"]
 
 
-def test_get_dependencies(test_code_ast):
+def test_get_dependencies(test_code_ast: ast.AST):
+    """Test finding the number of dependencies in a code file"""
     from utils.stats.code import get_dependencies
 
     dependencies = []

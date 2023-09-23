@@ -23,7 +23,7 @@ def main():
             default_index=0,
         )
 
-    repo_path = st.text_input("Enter github repo adress")
+    repo_path = st.text_input("Enter github repo address")
     btn = st.button("Submit")
 
     st.session_state.paths = {"repo_path": repo_path}

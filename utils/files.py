@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def list_files_in_dir(directory: str) -> dict[str, list[str]]:
+def list_py_files_in_dir(directory: str) -> dict[str, list[str]]:
     """List all files in directory
 
     Arguments:
@@ -11,7 +11,7 @@ def list_files_in_dir(directory: str) -> dict[str, list[str]]:
     Returns:
         dict -- dictionary with files as keys and empty list as values
     """
-    file_list = {}
+    file_list = []
     for root, _, files in os.walk(directory):
         for file in files:
             if (
@@ -20,7 +20,7 @@ def list_files_in_dir(directory: str) -> dict[str, list[str]]:
                 and not "__init__" in file
                 and file.endswith(".py")
             ):
-                file_list[os.path.join(root, file)] = []
+                file_list.append(os.path.join(root, file))
     return file_list
 
 
@@ -33,7 +33,7 @@ def get_py_files_from_dir(path: str) -> dict[str, list[str]]:
     Returns:
         dict -- dictionary with files as keys and empty list as values
     """
-    return list_files_in_dir(path)
+    return list_py_files_in_dir(path)
 
 
 def clone_github_get_path(repo_path: str) -> str:

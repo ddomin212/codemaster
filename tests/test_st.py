@@ -11,6 +11,7 @@ EXPECTED_STATE_VARS = [
 
 
 def test_fill_state_vars():
+    """Test filling streamlit SessionState variables"""
     from utils.st import fill_state_vars
 
     svars = {}
@@ -19,6 +20,7 @@ def test_fill_state_vars():
 
 
 def test_get_code_analysis():
+    """Test getting code analysis for a codebase and storing it in streamlit SessionState"""
     from streamlit.runtime.state import SessionState
 
     from utils.st import get_code_analysis

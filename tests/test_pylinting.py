@@ -3,7 +3,8 @@ from pylint.utils.linterstats import LinterStats
 from .conftest import TEST_CODE_PATH, TEST_CODEBASE_PATH
 
 
-def test_lint_codebase(test_file_dict):
+def test_lint_codebase(test_file_dict: dict[str, list[str]]):
+    """Test linting codebase"""
     from utils.pylinting import lint_codebase
 
     pylint_outs = lint_codebase(TEST_CODEBASE_PATH, test_file_dict)
@@ -15,6 +16,7 @@ def test_lint_codebase(test_file_dict):
 
 
 def test_pylint_code():
+    """Test linting a single python file"""
     from utils.pylinting import pylint_code
 
     pylint_options = ["--disable=import-error"]
@@ -35,6 +37,7 @@ def test_pylint_code():
 
 
 def test_run_linter():
+    """Test running pylint on a python file"""
     from utils.pylinting import run_linter
 
     pylint_options = ["--disable=import-error"]
