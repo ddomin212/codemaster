@@ -24,6 +24,7 @@ jobs:
       - name: Run tests
         run: |
           git clone https://github.com/ddomin212/bnb_web.git static/repos/ddomin212/bnb_web
+          rm -rf static/repos/ddomin212/bnb_web/tests
       - name: Test with pytest
         run: pytest
         env:
