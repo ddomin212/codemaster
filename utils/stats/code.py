@@ -1,14 +1,14 @@
 import ast
 import re
 
-import pandas as pd
+from pandas import DataFrame
 
 
-def find_max_chained_nests(node):
+def find_max_chained_nests(node: ast.AST) -> int:
     """Find the maximum number of chained nests in a node
 
     Arguments:
-        node {ast.Node} -- The node to search
+        node {ast.AST} -- The node to search
     """
     if isinstance(node, ast.Call):
         return (
@@ -30,7 +30,7 @@ def find_max_chained_nests(node):
         return 0
 
 
-def get_max_indent(code, num_indents):
+def get_max_indent(code: str, num_indents: list[int]):
     """Find the maximum indent level in a code file
 
     Arguments:
@@ -52,17 +52,17 @@ def get_max_indent(code, num_indents):
 
 
 def get_dependencies(
-    tree,
-    dependencies,
-    filename_as_dep,
-    file_names,
-    num_dependencies,
-    num_file_dependencies,
+    tree: ast.AST,
+    dependencies: list[str],
+    filename_as_dep: str,
+    file_names: dict[str, list[str]],
+    num_dependencies: list[int],
+    num_file_dependencies: list[int],
 ):
     """Get the dependencies for a given file
 
     Arguments:
-        tree {ast.Node} -- The AST of the file
+        tree {ast.AST} -- The AST of the file
         dependencies {list} -- Accumulator for the dependencies
         filename_as_dep {str} -- The filename as a dependency
         file_names {dict} -- Accumulator for the file names
@@ -97,7 +97,7 @@ def get_dependencies(
     num_file_dependencies.append(len(import_nodes))
 
 
-def get_num_lines(code, total_lines):
+def get_num_lines(code: str, total_lines: list[int]):
     """Get the number of lines in a code file
 
     Arguments:
@@ -108,11 +108,11 @@ def get_num_lines(code, total_lines):
     total_lines.append(num_lines)
 
 
-def get_num_functions(tree, num_functions):
+def get_num_functions(tree: ast.AST, num_functions: list[int]):
     """Get the number of functions in a code file
 
     Arguments:
-        tree {ast.Node} -- The AST of the file
+        tree {ast.AST} -- The AST of the file
         num_functions {list} -- Accumulator for the number of functions
     """
     functions = [
@@ -123,11 +123,11 @@ def get_num_functions(tree, num_functions):
     num_functions.append(len(functions))
 
 
-def get_num_classes(tree, num_classes):
+def get_num_classes(tree: ast.AST, num_classes: list[int]):
     """Get the number of classes in a code file
 
     Arguments:
-        tree {ast.Node} -- The AST of the file
+        tree {ast.AST} -- The AST of the file
         num_classes {list} -- Accumulator for the number of classes
     """
     classes = [
@@ -136,11 +136,11 @@ def get_num_classes(tree, num_classes):
     num_classes.append(len(classes))
 
 
-def get_num_variables(tree, num_variables):
+def get_num_variables(tree: ast.AST, num_variables: list[int]):
     """Get the number of variables in a code file
 
     Arguments:
-        tree {ast.Node} -- The AST of the file
+        tree {ast.AST} -- The AST of the file
         num_variables {list} -- Accumulator for the number of variables
     """
     variables = [
@@ -152,11 +152,11 @@ def get_num_variables(tree, num_variables):
     num_variables.append(len(variables))
 
 
-def get_num_obj_nests(tree, num_obj_nests):
+def get_num_obj_nests(tree: ast.AST, num_obj_nests: list[int]):
     """Get the maximum number of chained nests in a code file
 
     Arguments:
-        tree {ast.Node} -- The AST of the file
+        tree {ast.AST} -- The AST of the file
         num_obj_nests {list} -- Accumulator for the maximum number of chained nests
     """
     max_nests = max(
@@ -166,18 +166,18 @@ def get_num_obj_nests(tree, num_obj_nests):
 
 
 def file_stats_code(
-    path,
-    f,
-    codes,
-    file_names,
-    num_functions,
-    num_classes,
-    num_variables,
-    num_file_dependencies,
-    num_dependencies,
-    num_obj_nests,
-    num_indents,
-    total_lines,
+    path: str,
+    f: str,
+    codes: list[str],
+    file_names: dict[str, list[str]],
+    num_functions: list[int],
+    num_classes: list[int],
+    num_variables: list[int],
+    num_file_dependencies: list[int],
+    num_dependencies: list[int],
+    num_obj_nests: list[int],
+    num_indents: list[int],
+    total_lines: list[int],
 ):
     """Get the stats for a given file
 
@@ -221,3 +221,21 @@ def file_stats_code(
     get_num_classes(tree, num_classes)
     get_num_variables(tree, num_variables)
     get_num_obj_nests(tree, num_obj_nests)
+
+
+def get_stats_as_tuples(
+    stats_df: DataFrame, file_name: str
+) -> list[tuple[str, int]]:
+    """Take a row from the stats dataframe and return a list of tuples, in format (col_name, value)
+
+    Arguments:
+        stats_df {pd.DataFrame} -- dataframe with stats
+        file_name {str} -- name of file to get stats for
+    """
+    row = stats_df[stats_df.Files == file_name]
+    tuples = [
+        (col, value)
+        for col, value in row.iloc[0].items()
+        if col != "Files" and col != "Code"
+    ]
+    return tuples

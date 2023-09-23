@@ -18,7 +18,7 @@ BOTS = {
 }
 
 
-def select_params(module_code_map):
+def select_params(module_code_map: dict[str, str]) -> tuple[str, str]:
     """Select module (code file) and bot
 
     Arguments:
@@ -40,7 +40,7 @@ def select_params(module_code_map):
     return module, bot
 
 
-def render_response(module, module_code_map, bot):
+def render_response(module: str, module_code_map: dict[str, str], bot: str):
     """Render response from bot on page
 
     Arguments:
@@ -51,12 +51,22 @@ def render_response(module, module_code_map, bot):
     code = module_code_map[module]
 
     try:
-        st.markdown(rate_code(code, BOTS[bot]))
+        if not hasattr(st.session_state, "chat"):
+            response, chat_id, chat_code = rate_code(code, BOTS[bot])
+            st.session_state.chat = [chat_id, chat_code]
+        else:
+            response, chat_id, chat_code = rate_code(
+                code,
+                BOTS[bot],
+                st.session_state.chat[0],
+                st.session_state.chat[1],
+            )
+        st.markdown(response)
     except RuntimeError as e:
         st.error(body="Error: " + str(e), icon="🔥")
 
 
-def codemaster(module_code_map):
+def codemaster(module_code_map: dict[str, str]):
     """Show codemaster page
 
     Arguments:

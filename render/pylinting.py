@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-def show_code_file(code):
+def show_code_file(code: str):
     """Show code file if button is pressed
 
     Arguments:
@@ -12,7 +12,9 @@ def show_code_file(code):
         st.code(code, language="python", line_numbers=True)
 
 
-def pylint_stats(pylint_dict):
+def pylint_stats(
+    pylint_dict: dict[str, tuple[str, dict[str, float | int], str]]
+):
     """Show pylint stats
 
     Arguments:

@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def list_files_in_dir(directory):
+def list_files_in_dir(directory: str) -> dict[str, list[str]]:
     """List all files in directory
 
     Arguments:
@@ -24,7 +24,7 @@ def list_files_in_dir(directory):
     return file_list
 
 
-def get_py_files_from_dir(path):
+def get_py_files_from_dir(path: str) -> dict[str, list[str]]:
     """Get all python files from a directory
 
     Arguments:
@@ -36,7 +36,7 @@ def get_py_files_from_dir(path):
     return list_files_in_dir(path)
 
 
-def clone_github_get_path(repo_path):
+def clone_github_get_path(repo_path: str) -> str:
     """Clone a github repo and return the path to it
 
     Arguments:

@@ -1,10 +1,13 @@
 import streamlit as st
+from pandas.core.frame import DataFrame
 
-from utils.stats.codebase import get_libs, num_files
+from utils.stats.codebase import num_files
 from utils.viz import plot_dependencies
 
 
-def page_data(libs, file_dict):
+def page_data(
+    libs: list[str], file_dict: dict[str, list[str]]
+) -> tuple[dict[str, int], list]:
     """Get data for codebase page
 
     Arguments:
@@ -19,7 +22,7 @@ def page_data(libs, file_dict):
     return stats_dict, libs
 
 
-def stats_row(stats_dict):
+def stats_row(stats_dict: dict[str, int]):
     """Show the metrics row
 
     Arguments:
@@ -31,7 +34,11 @@ def stats_row(stats_dict):
         col.metric(label=l, value=v)
 
 
-def codebase_stats(libs, dependencies_df, file_dict):
+def codebase_stats(
+    libs: list[str],
+    dependencies_df: DataFrame,
+    file_dict: dict[str, list[str]],
+):
     """Show the codebase page
 
     Arguments:

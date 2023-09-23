@@ -1,7 +1,8 @@
 from graphviz import Digraph
+from pandas.core.frame import DataFrame
 
 
-def plot_dependencies(dependencies):
+def plot_dependencies(dependencies: DataFrame) -> Digraph:
     """Plot the dependencies
 
     Arguments:
@@ -17,8 +18,6 @@ def plot_dependencies(dependencies):
 
     reduced = reduce_dependencies(dependencies)
 
-    reduced.to_csv("reduced.csv")
-
     add_nodes(dot, local_modules, reduced)
 
     add_edges(dot, reduced)
@@ -26,7 +25,7 @@ def plot_dependencies(dependencies):
     return dot
 
 
-def add_edges(dot, dependencies):
+def add_edges(dot: Digraph, dependencies: DataFrame):
     """Add edges to the graph
 
     Arguments:
@@ -37,7 +36,7 @@ def add_edges(dot, dependencies):
         dot.edge(row["File"], row["Dependency"])
 
 
-def split_dependency(x):
+def split_dependency(x: str) -> tuple[str, str | None]:
     """Split a dependency into module and file
 
     Arguments:
@@ -53,7 +52,7 @@ def split_dependency(x):
         return parts[0], None
 
 
-def get_local_modules(df):
+def get_local_modules(df: DataFrame) -> list[str]:
     """Get the local modules
 
     Arguments:
@@ -66,7 +65,7 @@ def get_local_modules(df):
     return list(set(module_files + modules))
 
 
-def add_nodes(dot, local_modules, dependencies):
+def add_nodes(dot: Digraph, local_modules: list[str], dependencies: DataFrame):
     """Add nodes to the graph
 
     Arguments:
@@ -88,7 +87,7 @@ def add_nodes(dot, local_modules, dependencies):
             dot.node(dep, color="black")
 
 
-def reduce_dependencies(df):
+def reduce_dependencies(df: DataFrame) -> DataFrame:
     """Reduce the dependencies to only include the module, for the purpose of visualization
 
     Arguments:

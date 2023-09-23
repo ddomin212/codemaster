@@ -1,10 +1,12 @@
+from streamlit.runtime.state import SessionState
+
 from .code import code_stats
 from .codebase import codebase_stats
 from .codemaster import codemaster
 from .pylinting import pylint_stats
 
 
-def render_content(selected, st_state):
+def render_content(selected: str, st_state: SessionState):
     """Render content on site based on selected option
 
     Arguments:

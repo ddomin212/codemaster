@@ -3,7 +3,7 @@ import pandas as pd
 from .code import file_stats_code
 
 
-def get_libs(path):
+def get_libs(path: str) -> list[str] | list:
     """Get the libraries used in a codebase from requirements.txt
 
     Arguments:
@@ -21,7 +21,7 @@ def get_libs(path):
         return []
 
 
-def num_files(file_dict):
+def num_files(file_dict: dict[str, list[str]]) -> int:
     """Get the number of files in a codebase
 
     Arguments:
@@ -33,7 +33,7 @@ def num_files(file_dict):
     return len(file_dict.keys())
 
 
-def module_to_code_map(df):
+def module_to_code_map(df: pd.core.frame.DataFrame) -> dict[str, str]:
     """Create a dictionary mapping modules to code
 
     Arguments:
@@ -45,7 +45,7 @@ def module_to_code_map(df):
     return {module: code for module, code in zip(df["Files"], df["Code"])}
 
 
-def create_dependency_df(file_names):
+def create_dependency_df(file_names: dict[str, list[str]]) -> pd.DataFrame:
     """Create a dataframe with file dependencies
 
     Arguments:
@@ -65,17 +65,17 @@ def create_dependency_df(file_names):
 
 
 def create_stat_df(
-    num_functions,
-    num_classes,
-    num_variables,
-    num_file_dependencies,
-    num_dependencies,
-    num_obj_nests,
-    num_indents,
-    total_lines,
-    codes,
-    file_names,
-):
+    num_functions: list[int],
+    num_classes: list[int],
+    num_variables: list[int],
+    num_file_dependencies: list[int],
+    num_dependencies: list[int],
+    num_obj_nests: list[int],
+    num_indents: list[int],
+    total_lines: list[int],
+    codes: list[str],
+    file_names: dict[str, list[str]],
+) -> pd.DataFrame:
     """Create a dataframe with code stats
 
     Arguments:
@@ -109,7 +109,9 @@ def create_stat_df(
     )
 
 
-def file_stats_codebase(path, file_dict):
+def file_stats_codebase(
+    path: str, file_dict: dict[str, list[str]]
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Get the stats for a codebase
 
     Arguments:

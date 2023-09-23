@@ -3,9 +3,10 @@
 *.pdf
 *.csv
 *.ipynb
-test.py
+poe.py
 /static
 Codemaster.py
 /legacy
 **/__pycache__/
+.pytest_cache/
 ```

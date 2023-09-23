@@ -4,7 +4,12 @@ from dotenv import load_dotenv
 from utils.llms import call_poe
 
 
-def rate_code(code, bot):
+def rate_code(
+    code: str,
+    bot: str,
+    chat_id: str | None = None,
+    chat_code: str | None = None,
+) -> tuple[str, str, str]:
     text = f"""
     Ignore all previous instructions.
     You are an expert on writing clean and readable code in Python. You are asked to rate the following code on a scale of 1 to 10, with 1 being the worst and 10 being the best.
@@ -19,6 +24,6 @@ def rate_code(code, bot):
     {code}
     """
 
-    response = call_poe(text, bot)
+    response, chat_id, chat_code = call_poe(text, bot, chat_id, chat_code)
 
-    return response
+    return response, chat_id, chat_code

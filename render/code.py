@@ -1,8 +1,11 @@
 import altair as alt
 import streamlit as st
+from pandas.core.frame import DataFrame
+
+from utils.stats.code import get_stats_as_tuples
 
 
-def plot_chart(stats_df, y_val):
+def plot_chart(stats_df: DataFrame, y_val: str):
     """Plot a chart of files based on a given y value
 
     Arguments:
@@ -23,7 +26,7 @@ def plot_chart(stats_df, y_val):
     st.altair_chart(chart, use_container_width=True)
 
 
-def codebase_chart(stats_df):
+def codebase_chart(stats_df: DataFrame):
     """Select a column to plot on the Y axis
 
     Arguments:
@@ -36,7 +39,7 @@ def codebase_chart(stats_df):
     plot_chart(stats_df, y_val)
 
 
-def stats_row(sliced):
+def stats_row(sliced: list[tuple[str, int]]):
     """Show a row of metrics
 
     Arguments:
@@ -47,23 +50,7 @@ def stats_row(sliced):
         col.metric(label=l, value=v)
 
 
-def get_stats_as_tuples(stats_df, file_name):
-    """Take a row from the stats dataframe and return a list of tuples, in format (col_name, value)
-
-    Arguments:
-        stats_df {pd.DataFrame} -- dataframe with stats
-        file_name {str} -- name of file to get stats for
-    """
-    row = stats_df[stats_df.Files == file_name]
-    tuples = [
-        (col, value)
-        for col, value in row.iloc[0].items()
-        if col != "Files" and col != "Code"
-    ]
-    return tuples
-
-
-def code_file_stats(stats_df):
+def code_file_stats(stats_df: DataFrame):
     """Get all stats for a given file
 
     Arguments:
@@ -82,7 +69,7 @@ def code_file_stats(stats_df):
     stats_row(tuples[mid:])
 
 
-def code_stats(stats_df):
+def code_stats(stats_df: DataFrame):
     """Show code stats page
 
     Arguments:
