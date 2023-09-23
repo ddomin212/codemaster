@@ -4,6 +4,8 @@ from pandas.core.frame import DataFrame
 
 from utils.stats.code import get_stats_as_tuples
 
+from .other import exception_handler
+
 
 def plot_chart(stats_df: DataFrame, y_val: str):
     """Plot a chart of files based on a given y value
@@ -26,6 +28,7 @@ def plot_chart(stats_df: DataFrame, y_val: str):
     st.altair_chart(chart, use_container_width=True)
 
 
+@exception_handler
 def codebase_chart(stats_df: DataFrame):
     """Select a column to plot on the Y axis
 
@@ -50,6 +53,7 @@ def stats_row(sliced: list[tuple[str, int]]):
         col.metric(label=l, value=v)
 
 
+@exception_handler
 def code_file_stats(stats_df: DataFrame):
     """Get all stats for a given file
 
@@ -69,6 +73,7 @@ def code_file_stats(stats_df: DataFrame):
     stats_row(tuples[mid:])
 
 
+@exception_handler
 def code_stats(stats_df: DataFrame):
     """Show code stats page
 

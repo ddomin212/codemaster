@@ -4,6 +4,8 @@ from pandas.core.frame import DataFrame
 from utils.stats.codebase import num_files
 from utils.viz import plot_dependencies
 
+from .other import exception_handler
+
 
 def page_data(
     libs: list[str], file_dict: dict[str, list[str]]
@@ -22,6 +24,7 @@ def page_data(
     return stats_dict, libs
 
 
+@exception_handler
 def stats_row(stats_dict: dict[str, int]):
     """Show the metrics row
 
@@ -34,6 +37,7 @@ def stats_row(stats_dict: dict[str, int]):
         col.metric(label=l, value=v)
 
 
+@exception_handler
 def codebase_stats(
     libs: list[str],
     dependencies_df: DataFrame,

@@ -29,7 +29,3 @@ def test_get_code_analysis():
 
     get_code_analysis(st_state, btn=True)
     assert list(st_state.vars.keys()) == EXPECTED_STATE_VARS
-    assert (
-        st_state.paths["path"]
-        == "/home/dan/Documents/codemaster/static/repos/ddomin212/bnb_web/"
-    )

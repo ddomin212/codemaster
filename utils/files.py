@@ -45,13 +45,18 @@ def clone_github_get_path(repo_path: str) -> str:
     Returns:
         str -- path to local cloned repo
     """
-    subprocess.run(
+    result = subprocess.run(
         [
             "git",
             "clone",
             f"https://github.com/{repo_path}.git",
             f"static/repos/{repo_path}",
-        ]
+        ],
+        capture_output=True,
+        text=True,
     )
+    if result.returncode != 0:
+        if not "already exists and is not an empty directory" in result.stderr:
+            raise Exception(result.stderr.split("fatal: ")[1])
     path = os.getcwd() + "/static/repos/" + repo_path + "/"
     return path

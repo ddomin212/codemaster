@@ -3,6 +3,7 @@ from typing import Any
 
 from streamlit.runtime.state import SessionState
 
+from render.other import exception_handler
 from utils.files import clone_github_get_path, get_py_files_from_dir
 from utils.pylinting import lint_codebase
 from utils.stats.codebase import (
@@ -29,6 +30,7 @@ def fill_state_vars(svars: dict[str, Any], path: str):
     svars["module_code_map"] = module_to_code_map(svars["stat_df"])
 
 
+@exception_handler
 def get_code_analysis(st_state: SessionState, btn=False):
     """Get code analysis
 

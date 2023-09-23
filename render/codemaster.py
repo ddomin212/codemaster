@@ -2,6 +2,8 @@ import streamlit as st
 
 from utils.rate_code import rate_code
 
+from .other import exception_handler
+
 BOTS = {
     "Assistant": "capybara",
     "Claude": "a2",
@@ -40,6 +42,7 @@ def select_params(module_code_map: dict[str, str]) -> tuple[str, str]:
     return module, bot
 
 
+@exception_handler
 def render_response(module: str, module_code_map: dict[str, str], bot: str):
     """Render response from bot on page
 
@@ -50,22 +53,20 @@ def render_response(module: str, module_code_map: dict[str, str], bot: str):
     """
     code = module_code_map[module]
 
-    try:
-        if not hasattr(st.session_state, "chat"):
-            response, chat_id, chat_code = rate_code(code, BOTS[bot])
-            st.session_state.chat = [chat_id, chat_code]
-        else:
-            response, chat_id, chat_code = rate_code(
-                code,
-                BOTS[bot],
-                st.session_state.chat[0],
-                st.session_state.chat[1],
-            )
-        st.markdown(response)
-    except RuntimeError as e:
-        st.error(body="Error: " + str(e), icon="🔥")
+    if not hasattr(st.session_state, "chat"):
+        response, chat_id, chat_code = rate_code(code, BOTS[bot])
+        st.session_state.chat = [chat_id, chat_code]
+    else:
+        response, chat_id, chat_code = rate_code(
+            code,
+            BOTS[bot],
+            st.session_state.chat[0],
+            st.session_state.chat[1],
+        )
+    st.markdown(response)
 
 
+@exception_handler
 def codemaster(module_code_map: dict[str, str]):
     """Show codemaster page
 

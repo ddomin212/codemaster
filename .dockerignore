@@ -1,0 +1,14 @@
+/env
+.env
+*.pdf
+*.csv
+*.ipynb
+poe.py
+/static
+Codemaster.py
+/legacy
+**/__pycache__/
+.pytest_cache/
+.gitignore
+/tests
+```
