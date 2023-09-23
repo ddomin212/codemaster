@@ -3,3 +3,4 @@
     Optimize chatbots -> use one conversation for all messages, maybe softer token limit.
     try catch error handling
     Docker / deployment / CICD
+    Add e2e tests with playwright??
