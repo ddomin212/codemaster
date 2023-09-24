@@ -1,7 +1,7 @@
 """ This module contains functions for generating ideas for youtube videos. """
 from dotenv import load_dotenv
 
-from utils.llms import call_local_llama, call_poe
+from utils.llms_real import call_local_llama, call_poe
 
 
 def rate_code(
