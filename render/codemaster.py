@@ -17,6 +17,7 @@ BOTS = {
     "CodeLlama-large": "code_llama_34b_instruct",
     "Solar": "upstage_solar_0_70b_16bit",
     "PythonMaster": "PythonMind",
+    "Codemaster": "codemaster",
 }
 
 
@@ -39,7 +40,9 @@ def select_params(module_code_map: dict[str, str]) -> tuple[str, str]:
             list(module_code_map.keys()),
         )
 
-    return module, bot
+    submit = st.button("Generate")
+
+    return module, bot, submit
 
 
 @exception_handler
@@ -52,18 +55,20 @@ def render_response(module: str, module_code_map: dict[str, str], bot: str):
         bot {str} -- bot name
     """
     code = module_code_map[module]
+    response_container = st.empty()
+    st.session_state.response_container = response_container
 
-    if not hasattr(st.session_state, "chat"):
-        response, chat_id, chat_code = rate_code(code, BOTS[bot])
-        st.session_state.chat = [chat_id, chat_code]
+    if not hasattr(st.session_state, "chat_id"):
+        response, chat_id = rate_code(code, BOTS[bot])
+        st.session_state.chat_id = chat_id
     else:
-        response, chat_id, chat_code = rate_code(
+        response, chat_id = rate_code(
             code,
             BOTS[bot],
-            st.session_state.chat[0],
-            st.session_state.chat[1],
+            st.session_state.chat_id
         )
-    st.markdown(response)
+    
+    # st.markdown(response)
 
 
 @exception_handler
@@ -73,5 +78,6 @@ def codemaster(module_code_map: dict[str, str]):
     Arguments:
         module_code_map {dict} -- dict with module names as keys and code contents as values
     """
-    module, bot = select_params(module_code_map)
-    render_response(module, module_code_map, bot)
+    module, bot, submit = select_params(module_code_map)
+    if submit:
+        render_response(module, module_code_map, bot)

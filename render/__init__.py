@@ -6,8 +6,6 @@ from .codemaster import codemaster
 from .other import exception_handler
 from .pylinting import pylint_stats
 
-
-@exception_handler
 def render_content(selected: str, st_state: SessionState):
     """Render content on site based on selected option
 

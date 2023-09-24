@@ -1,14 +1,13 @@
 """ This module contains functions for generating ideas for youtube videos. """
 from dotenv import load_dotenv
 
-from utils.llms import call_poe
+from utils.llms import call_local_llama, call_poe
 
 
 def rate_code(
     code: str,
     bot: str,
     chat_id: str | None = None,
-    chat_code: str | None = None,
 ) -> tuple[str, str, str]:
     text = f"""
     Ignore all previous instructions.
@@ -24,6 +23,9 @@ def rate_code(
     {code}
     """
 
-    response, chat_id, chat_code = call_poe(text, bot, chat_id, chat_code)
+    if bot == "codemaster":
+        response = call_local_llama(code)
+    else:
+        response, chat_id = call_poe(text, bot, chat_id)
 
-    return response, chat_id, chat_code
+    return response, chat_id

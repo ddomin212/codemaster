@@ -13,5 +13,6 @@ def exception_handler(func):
             return func(*args, **kwargs)
         except Exception as e:
             st.error(body=e, icon=choice(ERROR_ICONS))
+            raise e
 
     return wrapper

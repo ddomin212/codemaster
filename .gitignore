@@ -9,4 +9,6 @@ Codemaster.py
 /legacy
 **/__pycache__/
 .pytest_cache/
+**llama-7b-**.bin
+llms_real.py
 ```
