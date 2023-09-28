@@ -25,6 +25,7 @@ def main():
 
     repo_path = st.text_input("Enter github repo address")
     btn = st.button("Submit")
+    st.divider()
 
     st.session_state.paths = {"repo_path": repo_path}
 

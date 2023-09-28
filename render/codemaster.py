@@ -17,7 +17,6 @@ BOTS = {
     "CodeLlama-large": "code_llama_34b_instruct",
     "Solar": "upstage_solar_0_70b_16bit",
     "PythonMaster": "PythonMind",
-    "Codemaster": "codemaster",
 }
 
 
@@ -30,10 +29,13 @@ def select_params(module_code_map: dict[str, str]) -> tuple[str, str]:
     c1, c2 = st.columns(2)
 
     with c1:
-        bot = st.selectbox(
-            "Bot - [docs](https://github.com/snowby666/poe-api-wrapper#available-default-bots):",
-            list(BOTS.keys()),
-        )
+        if st.session_state.provider == "poe.com":
+            bot = st.selectbox(
+                "Bot - [docs](https://github.com/snowby666/poe-api-wrapper#available-default-bots):",
+                list(BOTS.keys()),
+            )
+        else:
+            st.markdown("You cannot select a bot when using the Bard API.")
     with c2:
         module = st.selectbox(
             "Module:",
@@ -71,6 +73,28 @@ def render_response(module: str, module_code_map: dict[str, str], bot: str):
     # st.markdown(response)
 
 
+def select_provider():
+    """Select provider (bot)"""
+    provider = st.selectbox(
+        "Provider:",
+        ["poe.com", "Bard"]
+    )
+    st.session_state.provider = provider
+    if provider == "poe.com":
+        st.session_state.POE_API_KEY = st.text_input("Your poe API Key:")
+        if st.session_state.POE_API_KEY:
+            return True
+    else:
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.session_state._1PSID = st.text_input("Your Bart _1PSID Cookie:")
+        with c2:
+            st.session_state._1PSIDTS = st.text_input("Your Bart _1PSIDTS Cookie:")
+        with c3:
+            st.session_state._1PSIDCC = st.text_input("Your Bart _1PSIDCC Cookie:")
+        if st.session_state._1PSID and st.session_state._1PSIDTS and st.session_state._1PSIDCC:
+            return True
+
 @exception_handler
 def codemaster(module_code_map: dict[str, str]):
     """Show codemaster page
@@ -78,6 +102,7 @@ def codemaster(module_code_map: dict[str, str]):
     Arguments:
         module_code_map {dict} -- dict with module names as keys and code contents as values
     """
-    module, bot, submit = select_params(module_code_map)
-    if submit:
-        render_response(module, module_code_map, bot)
+    if select_provider():
+        module, bot, submit = select_params(module_code_map)
+        if submit:
+            render_response(module, module_code_map, bot)

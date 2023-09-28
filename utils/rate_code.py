@@ -1,5 +1,5 @@
-from utils.llms import call_local_llama, call_poe
-
+from utils.llms import call_bard, call_poe
+import streamlit as st
 
 def rate_code(
     code: str,
@@ -20,8 +20,10 @@ def rate_code(
     {code}
     """
 
-    if bot == "codemaster":
-        response = call_local_llama(code)
+    print("PROVIDER:", st.session_state.provider)
+
+    if st.session_state.provider == "Bard":
+        response = call_bard(code)
     else:
         response, chat_id = call_poe(text, bot, chat_id)
 

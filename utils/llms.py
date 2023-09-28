@@ -19,7 +19,7 @@ def call_poe(
     from poe_api_wrapper import PoeApi
     load_dotenv()
 
-    token = os.getenv("POE_API_TOKEN")
+    token = st.session_state.POE_API_KEY
     client = PoeApi(token)
 
     bot_response = ""
@@ -36,17 +36,20 @@ def call_poe(
             bot_response += chunk["response"]
             st.session_state.response_container.markdown(bot_response)
         return chunk["text"], chunk["chatId"]
+    
+def call_bard(prompt: str):
+    from bardapi import BardCookies
 
+    cookie_dict = {
+        "__Secure-1PSID": st.session_state._1PSID,
+        "__Secure-1PSIDTS": st.session_state._1PSIDTS,
+        "__Secure-1PSIDCC": st.session_state._1PSIDCC,
+        # Any cookie values you want to pass session object.
+    }
 
-def call_local_llama(prompt: str) -> str:
-    from langchain.llms import CTransformers
+    bard = BardCookies(cookie_dict=cookie_dict)
+    response = bard.get_answer(prompt)
+    print(response.keys())
+    st.session_state.response_container.markdown(response['content'])
 
-    llm = CTransformers(
-        model="/home/dan/Documents/codemaster/llama-2-7b-chat.ggmlv3.q4_0.bin",
-        model_type="llama",
-        config={"max_new_tokens": 128, "temperature": 0.9},
-    )
-
-    text = llm.predict(prompt)
-    print(text)
-    return text
+        
