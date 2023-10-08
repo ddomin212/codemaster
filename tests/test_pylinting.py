@@ -15,13 +15,13 @@ def test_lint_codebase(test_file_dict: dict[str, list[str]]):
     assert type(pylint_outs["app"][2]) == str
 
 
-def test_pylint_code():
+def test_lint_code():
     """Test linting a single python file"""
-    from utils.pylinting import pylint_code
+    from utils.pylinting import lint_code
 
     pylint_options = ["--disable=import-error"]
     pylint_outputs = {}
-    pylint_code(
+    lint_code(
         TEST_CODEBASE_PATH, TEST_CODE_PATH, pylint_options, pylint_outputs
     )
     assert len(pylint_outputs.keys()) == 1
